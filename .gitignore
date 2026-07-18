@@ -1,0 +1,11 @@
+# C#/WPF
+**/bin/
+**/obj/
+.vs/
+*.user
+
+# Inno Setupビルド出力
+/installer/Output/
+
+# CodeGraphインデックス(ローカルキャッシュ)
+/.codegraph/

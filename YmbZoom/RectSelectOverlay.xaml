@@ -1,0 +1,28 @@
+<Window x:Class="YmbZoom.RectSelectOverlay"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        mc:Ignorable="d"
+        Title="RectSelectOverlay"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="#33000000"
+        Topmost="True"
+        ShowInTaskbar="False"
+        Cursor="Cross"
+        KeyDown="Overlay_KeyDown"
+        MouseDown="Overlay_MouseDown"
+        MouseMove="Overlay_MouseMove"
+        MouseUp="Overlay_MouseUp">
+    <Grid>
+        <TextBlock Text="ドラッグで矩形を選択(Escで中止)"
+                   Foreground="White" FontSize="20" FontWeight="Bold"
+                   HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,24,0,0" />
+        <Canvas x:Name="RootCanvas">
+            <Rectangle x:Name="SelectionRect"
+                       Stroke="#FF00E5FF" StrokeThickness="2" Fill="#3300E5FF"
+                       Visibility="Collapsed" />
+        </Canvas>
+    </Grid>
+</Window>

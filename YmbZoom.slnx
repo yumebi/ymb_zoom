@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="YmbZoom.Tests/YmbZoom.Tests.csproj" />
+  <Project Path="YmbZoom/YmbZoom.csproj" />
+</Solution>

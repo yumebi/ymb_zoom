@@ -1,0 +1,106 @@
+<Window x:Class="YmbZoom.MainZoomWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:YmbZoom"
+        xmlns:core="clr-namespace:YmbZoom.Core"
+        mc:Ignorable="d"
+        Title="YMB ZOOM"
+        Icon="Resources/icon.ico"
+        Height="560" Width="760"
+        WindowStyle="None"
+        ResizeMode="CanResizeWithGrip"
+        Topmost="True"
+        Background="Black"
+        SizeChanged="Window_SizeChanged">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- 固定タイトル行: ここは常に空きスペースがあるためウィンドウ移動用ドラッグハンドルとして確実に機能する -->
+        <Border Grid.Row="0" Background="#FF161616" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <Grid Margin="6,3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" IsHitTestVisible="False">
+                    <Image Source="Resources/icon.ico" Width="16" Height="16" Margin="0,0,6,0" />
+                    <TextBlock Text="YMB ZOOM" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" />
+                    <TextBlock x:Name="VersionText" Foreground="#FF9E9E9E" FontSize="11"
+                               VerticalAlignment="Center" Margin="6,2,0,0" />
+                </StackPanel>
+
+                <Button x:Name="CloseButton" Grid.Column="2" Content="×" Width="26" Height="22" Click="CloseButton_Click" />
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="1" Background="#FF202020">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
+            <StackPanel Orientation="Horizontal" Margin="6" VerticalAlignment="Center">
+                <TextBlock Text="矩形指定" Foreground="White" VerticalAlignment="Center" Margin="0,0,4,0" />
+                <ComboBox x:Name="RectModeCombo" Width="120" VerticalAlignment="Center" Margin="0,0,6,0"
+                          SelectionChanged="RectModeCombo_SelectionChanged">
+                    <ComboBoxItem Content="ホットキー選択" IsSelected="True" />
+                    <ComboBoxItem Content="常駐ドラッグ枠" />
+                    <ComboBoxItem Content="カーソル追従" />
+                </ComboBox>
+                <Button x:Name="StartOverlaySelectButton" Content="矩形を選択..." Margin="0,0,12,0" Click="StartOverlaySelectButton_Click" />
+
+                <TextBlock Text="倍率" Foreground="White" VerticalAlignment="Center" Margin="0,0,4,0" />
+                <Slider x:Name="ZoomSlider" Minimum="1" Maximum="8" Value="2" Width="90" VerticalAlignment="Center"
+                        ValueChanged="ZoomSlider_ValueChanged" />
+                <TextBlock x:Name="ZoomValueText" Text="2.0x" Foreground="White" VerticalAlignment="Center" Margin="4,0,12,0" Width="34" />
+
+                <CheckBox x:Name="GrayscaleCheck" Content="グレースケール" Foreground="White" VerticalAlignment="Center" Margin="0,0,10,0"
+                          Checked="Filter_Changed" Unchecked="Filter_Changed" />
+                <CheckBox x:Name="InvertCheck" Content="反転" Foreground="White" VerticalAlignment="Center" Margin="0,0,10,0"
+                          Checked="Filter_Changed" Unchecked="Filter_Changed" />
+                <CheckBox x:Name="HighContrastCheck" Content="ハイコントラスト" Foreground="White" VerticalAlignment="Center" Margin="0,0,10,0"
+                          Checked="Filter_Changed" Unchecked="Filter_Changed" />
+
+                <TextBlock Text="色弱対応" Foreground="White" VerticalAlignment="Center" Margin="0,0,4,0" />
+                <ComboBox x:Name="ColorblindCombo" Width="90" VerticalAlignment="Center" Margin="0,0,12,0"
+                          SelectionChanged="Filter_Changed">
+                    <ComboBoxItem Content="なし" IsSelected="True" />
+                    <ComboBoxItem Content="1型(赤)" />
+                    <ComboBoxItem Content="2型(緑)" />
+                    <ComboBoxItem Content="3型(青)" />
+                </ComboBox>
+
+                <TextBlock Text="コントラスト" Foreground="White" VerticalAlignment="Center" Margin="0,0,4,0" />
+                <Slider x:Name="ContrastSlider" Minimum="0.5" Maximum="2.5" Value="1.0" Width="80" VerticalAlignment="Center"
+                        ValueChanged="Filter_Changed" />
+
+                <TextBlock Text="明度" Foreground="White" VerticalAlignment="Center" Margin="8,0,4,0" />
+                <Slider x:Name="BrightnessSlider" Minimum="-0.5" Maximum="0.5" Value="0" Width="80" VerticalAlignment="Center"
+                        ValueChanged="Filter_Changed" />
+
+                <CheckBox x:Name="SharpenCheck" Content="シャープ化" Foreground="White" VerticalAlignment="Center" Margin="10,0,4,0"
+                          Checked="Filter_Changed" Unchecked="Filter_Changed" />
+                <Slider x:Name="SharpenSlider" Minimum="0" Maximum="1.5" Value="0.5" Width="80" VerticalAlignment="Center"
+                        ValueChanged="Filter_Changed" />
+
+                <Button x:Name="SettingsButton" Content="設定..." Margin="16,0,0,0" Click="SettingsButton_Click" />
+            </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <Grid Grid.Row="2" ClipToBounds="True" Background="Transparent"
+              MouseWheel="ZoomContent_MouseWheel">
+            <core:MagnifierEngine x:Name="Magnifier" />
+            <Image x:Name="SoftwareImage" Stretch="None" HorizontalAlignment="Left" VerticalAlignment="Top"
+                   RenderTransformOrigin="0,0" Visibility="Collapsed">
+                <Image.RenderTransform>
+                    <ScaleTransform x:Name="SoftwareScale" ScaleX="2" ScaleY="2" />
+                </Image.RenderTransform>
+            </Image>
+        </Grid>
+    </Grid>
+</Window>

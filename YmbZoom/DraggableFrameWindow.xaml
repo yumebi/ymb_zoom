@@ -1,0 +1,26 @@
+<Window x:Class="YmbZoom.DraggableFrameWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        mc:Ignorable="d"
+        Title="矩形指定枠"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="#01000000"
+        Topmost="True"
+        ShowInTaskbar="False"
+        ResizeMode="CanResize"
+        Width="400" Height="300"
+        LocationChanged="Frame_LocationOrSizeChanged"
+        SizeChanged="Frame_LocationOrSizeChanged">
+    <shell:WindowChrome.WindowChrome>
+        <shell:WindowChrome CaptionHeight="0" ResizeBorderThickness="8" GlassFrameThickness="0" CornerRadius="0" />
+    </shell:WindowChrome.WindowChrome>
+    <Grid Background="Transparent" MouseLeftButtonDown="Grid_MouseLeftButtonDown">
+        <Rectangle Stroke="#FF00E5FF" StrokeThickness="3" Fill="Transparent" IsHitTestVisible="False" />
+        <TextBlock Text="ドラッグで移動・端でリサイズ" Foreground="#FF00E5FF" FontSize="12"
+                   HorizontalAlignment="Left" VerticalAlignment="Top" Margin="6,4,0,0" />
+    </Grid>
+</Window>
