@@ -151,6 +151,14 @@ public partial class MainZoomWindow : Window, IZoomSource
             _ => RectSelectMode.HotkeyOverlay
         };
 
+        ApplyCurrentMode();
+    }
+
+    /// <summary>_currentModeに応じたリソースを開始する(常駐ドラッグ枠/カーソル追従)。
+    /// RectModeComboの選択が変わらない場面(純正拡大鏡モードの解除など)でも
+    /// 呼び出せるよう、選択変更イベントから独立させている。</summary>
+    private void ApplyCurrentMode()
+    {
         StartOverlaySelectButton.Visibility = _currentMode == RectSelectMode.HotkeyOverlay
             ? Visibility.Visible
             : Visibility.Collapsed;
@@ -233,6 +241,7 @@ public partial class MainZoomWindow : Window, IZoomSource
         }
 
         ZoomValueText.Text = $"{e.NewValue:0.0}x";
+
         Magnifier.SetZoomFactor(e.NewValue);
         SoftwareScale.ScaleX = e.NewValue;
         SoftwareScale.ScaleY = e.NewValue;
@@ -253,9 +262,72 @@ public partial class MainZoomWindow : Window, IZoomSource
         UpdateColorEffect();
     }
 
-    private void UpdateColorEffect()
+    private void InvertCheck_Changed(object sender, RoutedEventArgs e)
     {
         if (!IsLoaded)
+        {
+            return;
+        }
+
+        UpdateColorEffect();
+    }
+
+    /// <summary>
+    /// 純正拡大鏡(DRM動画用)モードの起動/終了だけを行う。ズーム操作自体は標準拡大鏡の
+    /// ツールバーが独自の入力処理(WinUI3)を使っており外部からの遠隔操作を受け付けないため、
+    /// 利用者が標準拡大鏡を直接操作する前提。YMB ZOOM側は自前の描画を隠して道を譲るだけ。
+    /// </summary>
+    private void NativeBridgeCheck_Changed(object sender, RoutedEventArgs e)
+    {
+        if (!IsLoaded)
+        {
+            return;
+        }
+
+        bool active = NativeBridgeCheck.IsChecked == true;
+        SetControlsEnabledForBridge(!active);
+
+        if (active)
+        {
+            // 自前の矩形指定モードは無関係になるので停止し、自前レンダリングも隠す。
+            StopModeResources();
+            Magnifier.Visibility = Visibility.Collapsed;
+            SoftwareImage.Visibility = Visibility.Collapsed;
+            _softwareEngine.Stop();
+
+            NativeMagnifierBridge.Launch();
+        }
+        else
+        {
+            NativeMagnifierBridge.Exit();
+            Magnifier.Visibility = Visibility.Visible;
+            UpdateColorEffect();
+
+            // RectModeComboの選択値自体は変わっていないのでSelectionChangedは発火しない。
+            // 常駐ドラッグ枠/カーソル追従を使っていた場合はここで明示的に再開する。
+            ApplyCurrentMode();
+        }
+    }
+
+    /// <summary>純正拡大鏡モード中はYMB ZOOM独自のフィルタ/矩形指定/ズームが効かないため、対応コントロールを無効化する。</summary>
+    private void SetControlsEnabledForBridge(bool enabled)
+    {
+        RectModeCombo.IsEnabled = enabled;
+        StartOverlaySelectButton.IsEnabled = enabled;
+        ZoomSlider.IsEnabled = enabled;
+        GrayscaleCheck.IsEnabled = enabled;
+        InvertCheck.IsEnabled = enabled;
+        HighContrastCheck.IsEnabled = enabled;
+        ColorblindCombo.IsEnabled = enabled;
+        ContrastSlider.IsEnabled = enabled;
+        BrightnessSlider.IsEnabled = enabled;
+        SharpenCheck.IsEnabled = enabled;
+        SharpenSlider.IsEnabled = enabled;
+    }
+
+    private void UpdateColorEffect()
+    {
+        if (!IsLoaded || NativeBridgeCheck.IsChecked == true)
         {
             return;
         }

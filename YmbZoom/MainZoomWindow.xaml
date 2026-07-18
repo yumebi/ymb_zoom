@@ -61,7 +61,7 @@
                 <CheckBox x:Name="GrayscaleCheck" Content="グレースケール" Foreground="White" VerticalAlignment="Center" Margin="0,0,10,0"
                           Checked="Filter_Changed" Unchecked="Filter_Changed" />
                 <CheckBox x:Name="InvertCheck" Content="反転" Foreground="White" VerticalAlignment="Center" Margin="0,0,10,0"
-                          Checked="Filter_Changed" Unchecked="Filter_Changed" />
+                          Checked="InvertCheck_Changed" Unchecked="InvertCheck_Changed" />
                 <CheckBox x:Name="HighContrastCheck" Content="ハイコントラスト" Foreground="White" VerticalAlignment="Center" Margin="0,0,10,0"
                           Checked="Filter_Changed" Unchecked="Filter_Changed" />
 
@@ -86,6 +86,9 @@
                           Checked="Filter_Changed" Unchecked="Filter_Changed" />
                 <Slider x:Name="SharpenSlider" Minimum="0" Maximum="1.5" Value="0.5" Width="80" VerticalAlignment="Center"
                         ValueChanged="Filter_Changed" />
+
+                <CheckBox x:Name="NativeBridgeCheck" Content="純正拡大鏡(DRM動画用)" Foreground="#FFFFC107" VerticalAlignment="Center" Margin="16,0,0,0"
+                          Checked="NativeBridgeCheck_Changed" Unchecked="NativeBridgeCheck_Changed" />
 
                 <Button x:Name="SettingsButton" Content="設定..." Margin="16,0,0,0" Click="SettingsButton_Click" />
             </StackPanel>
