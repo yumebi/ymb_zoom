@@ -56,6 +56,15 @@ dotnet test
 
 データ保存先: `%APPDATA%\YmbZoom\settings.json`
 
+## 既知の制限
+
+- **DRM保護された動画(Netflix等)はズーム画面に映らない(黒くなる)**。Windows標準の拡大鏡は
+  `magnify.exe`固有の許可により保護コンテンツも表示できるが、この特別扱いはOSレベルで
+  Microsoft純正プロセスに限定されており、サードパーティアプリには開放されていない。
+  `uiAccess="true"` + コード署名 + Program Filesへのインストールという構成で検証したが、
+  この組み合わせでも保護コンテンツは表示されなかった(2026-07時点)。DRM以外の通常の動画・
+  画面内容は問題なくズームできる。
+
 ## ダウンロード
 
 ビルド不要で使う場合は [Releases](https://github.com/yumebi/ymb_zoom/releases/latest) から
