@@ -22,7 +22,7 @@
         </Grid.RowDefinitions>
 
         <!-- 固定タイトル行: ここは常に空きスペースがあるためウィンドウ移動用ドラッグハンドルとして確実に機能する -->
-        <Border Grid.Row="0" Background="#FF161616" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+        <Border Grid.Row="0" Background="{DynamicResource YmbBgBrush}" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
             <Grid Margin="6,3">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -32,19 +32,22 @@
 
                 <StackPanel Grid.Column="0" Orientation="Horizontal" IsHitTestVisible="False">
                     <Image Source="Resources/icon.ico" Width="16" Height="16" Margin="0,0,6,0" />
-                    <TextBlock Text="YMB ZOOM" Foreground="White" FontWeight="Bold" VerticalAlignment="Center" />
-                    <TextBlock x:Name="VersionText" Foreground="#FF9E9E9E" FontSize="11"
+                    <TextBlock Text="YMB ZOOM" Foreground="{DynamicResource YmbFgBrush}" FontWeight="Bold" VerticalAlignment="Center" />
+                    <TextBlock x:Name="VersionText" Foreground="{DynamicResource YmbFgDimBrush}" FontSize="11"
                                VerticalAlignment="Center" Margin="6,2,0,0" />
                 </StackPanel>
 
-                <Button x:Name="CloseButton" Grid.Column="2" Content="×" Width="26" Height="22" Click="CloseButton_Click" />
+                <!-- タイトルバーの閉じるボタン。暗黙のButtonスタイル(アクセント塗り)が
+                     効くと赤い×になって目立ちすぎるため、アイコンボタンにする。 -->
+                <Button x:Name="CloseButton" Grid.Column="2" Content="×" Width="26" Height="22"
+                        Style="{StaticResource YmbIconButton}" Click="CloseButton_Click" />
             </Grid>
         </Border>
 
-        <Border Grid.Row="1" Background="#FF202020">
+        <Border Grid.Row="1" Background="{DynamicResource YmbSurfaceBrush}">
             <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled">
             <StackPanel Orientation="Horizontal" Margin="6" VerticalAlignment="Center">
-                <TextBlock Text="矩形指定" Foreground="White" VerticalAlignment="Center" Margin="0,0,4,0" />
+                <TextBlock Text="矩形指定" Foreground="{DynamicResource YmbFgBrush}" VerticalAlignment="Center" Margin="0,0,4,0" />
                 <ComboBox x:Name="RectModeCombo" Width="120" VerticalAlignment="Center" Margin="0,0,6,0"
                           SelectionChanged="RectModeCombo_SelectionChanged">
                     <ComboBoxItem Content="ホットキー選択" IsSelected="True" />
@@ -53,19 +56,19 @@
                 </ComboBox>
                 <Button x:Name="StartOverlaySelectButton" Content="矩形を選択..." Margin="0,0,12,0" Click="StartOverlaySelectButton_Click" />
 
-                <TextBlock Text="倍率" Foreground="White" VerticalAlignment="Center" Margin="0,0,4,0" />
+                <TextBlock Text="倍率" Foreground="{DynamicResource YmbFgBrush}" VerticalAlignment="Center" Margin="0,0,4,0" />
                 <Slider x:Name="ZoomSlider" Minimum="1" Maximum="8" Value="2" Width="90" VerticalAlignment="Center"
                         ValueChanged="ZoomSlider_ValueChanged" />
-                <TextBlock x:Name="ZoomValueText" Text="2.0x" Foreground="White" VerticalAlignment="Center" Margin="4,0,12,0" Width="34" />
+                <TextBlock x:Name="ZoomValueText" Text="2.0x" Foreground="{DynamicResource YmbFgBrush}" VerticalAlignment="Center" Margin="4,0,12,0" Width="34" />
 
-                <CheckBox x:Name="GrayscaleCheck" Content="グレースケール" Foreground="White" VerticalAlignment="Center" Margin="0,0,10,0"
+                <CheckBox x:Name="GrayscaleCheck" Content="グレースケール" Foreground="{DynamicResource YmbFgBrush}" VerticalAlignment="Center" Margin="0,0,10,0"
                           Checked="Filter_Changed" Unchecked="Filter_Changed" />
-                <CheckBox x:Name="InvertCheck" Content="反転" Foreground="White" VerticalAlignment="Center" Margin="0,0,10,0"
+                <CheckBox x:Name="InvertCheck" Content="反転" Foreground="{DynamicResource YmbFgBrush}" VerticalAlignment="Center" Margin="0,0,10,0"
                           Checked="InvertCheck_Changed" Unchecked="InvertCheck_Changed" />
-                <CheckBox x:Name="HighContrastCheck" Content="ハイコントラスト" Foreground="White" VerticalAlignment="Center" Margin="0,0,10,0"
+                <CheckBox x:Name="HighContrastCheck" Content="ハイコントラスト" Foreground="{DynamicResource YmbFgBrush}" VerticalAlignment="Center" Margin="0,0,10,0"
                           Checked="Filter_Changed" Unchecked="Filter_Changed" />
 
-                <TextBlock Text="色弱対応" Foreground="White" VerticalAlignment="Center" Margin="0,0,4,0" />
+                <TextBlock Text="色弱対応" Foreground="{DynamicResource YmbFgBrush}" VerticalAlignment="Center" Margin="0,0,4,0" />
                 <ComboBox x:Name="ColorblindCombo" Width="90" VerticalAlignment="Center" Margin="0,0,12,0"
                           SelectionChanged="Filter_Changed">
                     <ComboBoxItem Content="なし" IsSelected="True" />
@@ -74,20 +77,20 @@
                     <ComboBoxItem Content="3型(青)" />
                 </ComboBox>
 
-                <TextBlock Text="コントラスト" Foreground="White" VerticalAlignment="Center" Margin="0,0,4,0" />
+                <TextBlock Text="コントラスト" Foreground="{DynamicResource YmbFgBrush}" VerticalAlignment="Center" Margin="0,0,4,0" />
                 <Slider x:Name="ContrastSlider" Minimum="0.5" Maximum="2.5" Value="1.0" Width="80" VerticalAlignment="Center"
                         ValueChanged="Filter_Changed" />
 
-                <TextBlock Text="明度" Foreground="White" VerticalAlignment="Center" Margin="8,0,4,0" />
+                <TextBlock Text="明度" Foreground="{DynamicResource YmbFgBrush}" VerticalAlignment="Center" Margin="8,0,4,0" />
                 <Slider x:Name="BrightnessSlider" Minimum="-0.5" Maximum="0.5" Value="0" Width="80" VerticalAlignment="Center"
                         ValueChanged="Filter_Changed" />
 
-                <CheckBox x:Name="SharpenCheck" Content="シャープ化" Foreground="White" VerticalAlignment="Center" Margin="10,0,4,0"
+                <CheckBox x:Name="SharpenCheck" Content="シャープ化" Foreground="{DynamicResource YmbFgBrush}" VerticalAlignment="Center" Margin="10,0,4,0"
                           Checked="Filter_Changed" Unchecked="Filter_Changed" />
                 <Slider x:Name="SharpenSlider" Minimum="0" Maximum="1.5" Value="0.5" Width="80" VerticalAlignment="Center"
                         ValueChanged="Filter_Changed" />
 
-                <CheckBox x:Name="NativeBridgeCheck" Content="純正拡大鏡(DRM動画用)" Foreground="#FFFFC107" VerticalAlignment="Center" Margin="16,0,0,0"
+                <CheckBox x:Name="NativeBridgeCheck" Content="純正拡大鏡(DRM動画用)" Foreground="{DynamicResource YmbWarningBrush}" VerticalAlignment="Center" Margin="16,0,0,0"
                           Checked="NativeBridgeCheck_Changed" Unchecked="NativeBridgeCheck_Changed" />
 
                 <Button x:Name="SettingsButton" Content="設定..." Margin="16,0,0,0" Click="SettingsButton_Click" />
