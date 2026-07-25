@@ -17,8 +17,10 @@ public sealed class TrayIconService : IDisposable
 
     public TrayIconService()
     {
+        // 並びはYMB共通: 表示切替 → 区切り → 設定 → 区切り → 終了
         var menu = new ContextMenuStrip();
-        menu.Items.Add("開く/隠す", null, (_, _) => OpenRequested?.Invoke());
+        menu.Items.Add("表示/非表示", null, (_, _) => OpenRequested?.Invoke());
+        menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add("設定...", null, (_, _) => SettingsRequested?.Invoke());
         menu.Items.Add(new ToolStripSeparator());
         menu.Items.Add("終了", null, (_, _) => ExitRequested?.Invoke());
