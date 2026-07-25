@@ -8,7 +8,7 @@
         Height="340" Width="380"
         WindowStartupLocation="CenterScreen"
         ResizeMode="NoResize"
-        Background="#FF202020">
+        Background="{DynamicResource YmbBgBrush}">
     <Grid Margin="16">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -21,13 +21,13 @@
         </Grid.RowDefinitions>
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,12">
-            <TextBlock Text="切替ホットキー" Foreground="White" Width="110" VerticalAlignment="Center" />
+            <TextBlock Text="切替ホットキー" Foreground="{DynamicResource YmbFgBrush}" Width="110" VerticalAlignment="Center" />
             <TextBox x:Name="HotkeyBox" Width="160" IsReadOnly="True" Text="Ctrl+Alt+Z"
                      PreviewKeyDown="HotkeyBox_PreviewKeyDown" />
         </StackPanel>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,12">
-            <TextBlock Text="既定の矩形指定" Foreground="White" Width="110" VerticalAlignment="Center" />
+            <TextBlock Text="既定の矩形指定" Foreground="{DynamicResource YmbFgBrush}" Width="110" VerticalAlignment="Center" />
             <ComboBox x:Name="DefaultRectModeCombo" Width="160">
                 <ComboBoxItem Content="ホットキー選択" />
                 <ComboBoxItem Content="常駐ドラッグ枠" />
@@ -36,24 +36,26 @@
         </StackPanel>
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,0,0,12">
-            <TextBlock Text="既定倍率" Foreground="White" Width="110" VerticalAlignment="Center" />
+            <TextBlock Text="既定倍率" Foreground="{DynamicResource YmbFgBrush}" Width="110" VerticalAlignment="Center" />
             <Slider x:Name="DefaultZoomSlider" Minimum="1" Maximum="8" Width="140" VerticalAlignment="Center" />
-            <TextBlock x:Name="DefaultZoomText" Foreground="White" Width="34" VerticalAlignment="Center" Margin="6,0,0,0" />
+            <TextBlock x:Name="DefaultZoomText" Foreground="{DynamicResource YmbFgBrush}" Width="34" VerticalAlignment="Center" Margin="6,0,0,0" />
         </StackPanel>
 
         <CheckBox x:Name="LaunchAtStartupCheck" Grid.Row="3" Content="Windows起動時に自動起動"
-                  Foreground="White" Margin="0,0,0,12" />
+                  Foreground="{DynamicResource YmbFgBrush}" Margin="0,0,0,12" />
 
         <CheckBox x:Name="ResidentInTrayCheck" Grid.Row="4" Content="×ボタンでタスクトレイに常駐する"
-                  Foreground="White" Margin="0,0,0,12" />
+                  Foreground="{DynamicResource YmbFgBrush}" Margin="0,0,0,12" />
 
         <StackPanel Grid.Row="5" Orientation="Horizontal" VerticalAlignment="Bottom" Margin="0,0,0,12">
-            <TextBlock x:Name="AboutVersionText" Foreground="#FF9E9E9E" VerticalAlignment="Center" Margin="0,0,10,0" />
-            <Button Content="アップデートを確認" Click="CheckUpdateButton_Click" />
+            <TextBlock x:Name="AboutVersionText" Foreground="{DynamicResource YmbFgDimBrush}" VerticalAlignment="Center" Margin="0,0,10,0" />
+            <Button Content="アップデートを確認" Style="{StaticResource YmbSecondaryButton}" Click="CheckUpdateButton_Click" />
         </StackPanel>
 
+        <!-- 保存が主要操作なので塗り(暗黙スタイル)、キャンセルは枠線のみにして階層を付ける -->
         <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Content="キャンセル" Width="80" Margin="0,0,8,0" Click="CancelButton_Click" />
+            <Button Content="キャンセル" Width="80" Margin="0,0,8,0"
+                    Style="{StaticResource YmbSecondaryButton}" Click="CancelButton_Click" />
             <Button Content="保存" Width="80" Click="SaveButton_Click" />
         </StackPanel>
     </Grid>
