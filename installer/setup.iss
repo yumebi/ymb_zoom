@@ -1,8 +1,8 @@
-#define MyAppName "YMB ZOOM"
+﻿#define MyAppName "YMB ZOOM"
 #define MyAppVersion "1.0.4"
 #define MyAppPublisher "yumebi"
 #define MyAppExeName "YmbZoom.exe"
-#define PublishDir "..\YmbZoom\bin\Release\net8.0-windows\win-x64\publish"
+#define PublishDir "..\YmbZoom\bin\Release\net10.0-windows\win-x64\publish"
 
 [Setup]
 AppId={{EE396B92-7BD3-4E6F-BC4D-BA9D5D546E92}
