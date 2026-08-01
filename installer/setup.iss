@@ -1,5 +1,5 @@
 #define MyAppName "YMB ZOOM"
-#define MyAppVersion "1.0.5"
+#define MyAppVersion "1.0.6"
 #define MyAppPublisher "yumebi"
 #define MyAppExeName "YmbZoom.exe"
 #define PublishDir "..\YmbZoom\bin\Release\net10.0-windows\win-x64\publish"
