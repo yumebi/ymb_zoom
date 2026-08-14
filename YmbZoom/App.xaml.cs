@@ -91,6 +91,7 @@ public partial class App : Application
             _settings.DefaultRectMode = updated.DefaultRectMode;
             _settings.ZoomFactor = updated.ZoomFactor;
             _settings.LaunchAtStartup = updated.LaunchAtStartup;
+            _settings.ResidentInTray = updated.ResidentInTray;
 
             SettingsService.SetLaunchAtStartup(_settings.LaunchAtStartup);
             RegisterToggleHotkey();
