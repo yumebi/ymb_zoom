@@ -35,7 +35,7 @@ public sealed class TrayIconService : IDisposable
         _icon.DoubleClick += (_, _) => OpenRequested?.Invoke();
         _icon.BalloonTipClicked += (_, _) =>
         {
-            if (_pendingReleaseUrl is { } url)
+            if (_pendingReleaseUrl is { } url && SecurityLimits.IsAllowedReleaseUrl(url))
             {
                 Process.Start(new ProcessStartInfo(url) { UseShellExecute = true });
             }
