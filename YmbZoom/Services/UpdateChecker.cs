@@ -35,7 +35,10 @@ public static class UpdateChecker
                 && Version.TryParse(current, out var currentV)
                 && latestV > currentV;
 
-            return new UpdateCheckResult(current, latest, updateAvailable, remote?.Url);
+            // リリースURLは許可リスト(SecurityLimits)で検証してから返す(SSRF/プロトコル混入防止)。
+            string? releaseUrl = SecurityLimits.IsAllowedReleaseUrl(remote?.Url) ? remote!.Url : null;
+
+            return new UpdateCheckResult(current, latest, updateAvailable, releaseUrl);
         }
         catch (Exception ex) when (ex is HttpRequestException or JsonException or TaskCanceledException)
         {

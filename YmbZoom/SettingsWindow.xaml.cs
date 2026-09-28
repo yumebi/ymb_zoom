@@ -47,7 +47,9 @@ public partial class SettingsWindow : Window
                     $"新しいバージョン v{result.LatestVersion} があります(現在: v{result.CurrentVersion})。\nダウンロードページを開きますか?",
                     "YMB ZOOM アップデート", MessageBoxButton.YesNo, MessageBoxImage.Information);
 
-                if (choice == MessageBoxResult.Yes && !string.IsNullOrEmpty(result.ReleaseUrl))
+                if (choice == MessageBoxResult.Yes
+                    && !string.IsNullOrEmpty(result.ReleaseUrl)
+                    && SecurityLimits.IsAllowedReleaseUrl(result.ReleaseUrl))
                 {
                     Process.Start(new ProcessStartInfo(result.ReleaseUrl) { UseShellExecute = true });
                 }
