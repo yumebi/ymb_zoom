@@ -4,14 +4,25 @@ using System.Text.Json;
 
 namespace YmbZoom.Services;
 
-/// <summary>GitHubリポジトリのversion.json(raw.githubusercontent.com)と現在バージョンを比較する。</summary>
+/// <summary>
+/// GitHub の最新リリース(Releases API)と現在バージョンを比較する。
+/// version.json ではなく公開済みのリリースを見るのは、リリースに失敗しても version.json だけ
+/// 先に更新されて、存在しない版を案内してしまうのを避けるため。
+/// </summary>
 public static class UpdateChecker
 {
-    private const string VersionUrl =
-        "https://raw.githubusercontent.com/yumebi/ymb_zoom/master/version.json";
+    private const string Repo = "yumebi/ymb_zoom";
 
-    private static readonly HttpClient Http = new() { Timeout = TimeSpan.FromSeconds(5) };
-    private static readonly JsonSerializerOptions JsonOptions = new() { PropertyNameCaseInsensitive = true };
+    private static readonly HttpClient Http = CreateHttpClient();
+
+    private static HttpClient CreateHttpClient()
+    {
+        // GitHub API は User-Agent が必須
+        var client = new HttpClient { Timeout = TimeSpan.FromSeconds(5) };
+        client.DefaultRequestHeaders.UserAgent.ParseAdd("YmbZoom-UpdateCheck");
+        client.DefaultRequestHeaders.Accept.ParseAdd("application/vnd.github+json");
+        return client;
+    }
 
     public static string CurrentVersion
     {
@@ -27,16 +38,13 @@ public static class UpdateChecker
         string current = CurrentVersion;
         try
         {
-            string json = await Http.GetStringAsync(VersionUrl);
-            var remote = JsonSerializer.Deserialize<RemoteVersion>(json, JsonOptions);
-            string latest = remote?.Version ?? current;
+            string json = await Http.GetStringAsync(GitHubRelease.ApiUrl(Repo));
+            var release = GitHubRelease.Parse(json, Repo);
+            string latest = release?.Version ?? current;
+            bool updateAvailable = release is not null && GitHubRelease.IsNewer(latest, current);
 
-            bool updateAvailable = Version.TryParse(latest, out var latestV)
-                && Version.TryParse(current, out var currentV)
-                && latestV > currentV;
-
-            // リリースURLは許可リスト(SecurityLimits)で検証してから返す(SSRF/プロトコル混入防止)。
-            string? releaseUrl = SecurityLimits.IsAllowedReleaseUrl(remote?.Url) ? remote!.Url : null;
+            // リリースURLは自リポジトリのものだけ(Parse が検証済み)。さらに SecurityLimits の許可リストでも確認する。
+            string? releaseUrl = SecurityLimits.IsAllowedReleaseUrl(release?.Url) ? release!.Url : null;
 
             return new UpdateCheckResult(current, latest, updateAvailable, releaseUrl);
         }
@@ -46,11 +54,6 @@ public static class UpdateChecker
         }
     }
 
-    private sealed class RemoteVersion
-    {
-        public string? Version { get; set; }
-        public string? Url { get; set; }
-    }
 }
 
 public sealed record UpdateCheckResult(string CurrentVersion, string LatestVersion, bool UpdateAvailable, string? ReleaseUrl);
