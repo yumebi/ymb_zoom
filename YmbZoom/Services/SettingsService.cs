@@ -11,8 +11,15 @@ public static class SettingsService
     private const string RunRegistryKey = @"Software\Microsoft\Windows\CurrentVersion\Run";
     private const string RunValueName = "YmbZoom";
 
+    /// <summary>開発・動作確認用。設定すると、設定ファイルの保存先をこのフォルダに切り替える。</summary>
+    public const string DataDirEnvVar = "YMB_ZOOM_DATA_DIR";
+
+    // 実際の設定に触れずに起動して確かめられるよう、環境変数で保存先を変えられる。
     private static string SettingsPath => Path.Combine(
-        Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "YmbZoom", "settings.json");
+        Environment.GetEnvironmentVariable(DataDirEnvVar) is { Length: > 0 } overrideDir
+            ? overrideDir
+            : Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "YmbZoom"),
+        "settings.json");
 
     /// <summary>Windows起動時の自動起動をレジストリ(HKCU\...\Run)で設定/解除する。</summary>
     public static void SetLaunchAtStartup(bool enabled)
