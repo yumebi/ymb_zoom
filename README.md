@@ -42,7 +42,7 @@ dotnet test
 
 ## 技術スタック
 
-- **言語/フレームワーク**: C# / .NET 8 (`net8.0-windows`) + WPF
+- **言語/フレームワーク**: C# / .NET 10 (`net10.0-windows`) + WPF
 - **ズーム描画**: Magnification API(`magnification.dll`)をP/Invokeし、ネイティブ"Magnifier"コントロールを
   `HwndHost`でWPFにホスト。DWM合成のため低遅延・低CPU。カラー行列(`MagSetColorEffect`)でコントラスト/
   反転/グレースケール/色弱対応フィルタを実現。
@@ -74,6 +74,13 @@ dotnet test
   クリックも"Windows.UI.Input.InputSite"のポインタ処理に認識されない。そのためこのモードでは
   利用者が標準拡大鏡を直接(マウスホイール/キーボードで)操作する必要がある。
   DRM以外の通常の動画・画面内容はYMB ZOOM自前のズームで問題なく拡大できる。
+
+## セキュリティと依存関係の更新
+
+- **脆弱性の検査**: 依存ライブラリの既知の脆弱性を、[OSV-Scanner](https://google.github.io/osv-scanner/) で、push・プルリクエスト・毎週月曜(10:00 JST)に自動で検査します(`.github/workflows/osv-scanner.yml`)。見つかるとこのワークフローが失敗します(リリースのワークフローとは独立で、リリースは止めません)。
+- **更新の提案**: [Dependabot](https://docs.github.com/ja/code-security/dependabot) が、毎週月曜に依存の更新をプルリクエストで提案します(`.github/dependabot.yml`)。公開から 14 日未満のバージョンは対象にしません(供給網攻撃への備え)。
+- **緊急の修正**: 実際に影響のある脆弱性の修正など、緊急性が高いものは、14 日未満でもすぐに取り込みます。
+- **失敗が残る場合**: 修正版がない、または上流(.NET や NuGet のパッケージ)の更新待ちの検出は、検査が失敗のまま残ることがあります。
 
 ## ダウンロード
 
